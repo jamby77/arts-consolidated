@@ -1,7 +1,7 @@
-import { Product } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
 import { AddToCartButton } from "@/components/add-to-cart-button";
+import { Product } from "@/types/products";
 
 export function ListItem({ product }: { product: Product }) {
   return (

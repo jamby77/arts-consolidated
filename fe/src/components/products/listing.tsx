@@ -1,4 +1,4 @@
-import { Product } from "@/lib/api";
+import { Product } from "@/types/products";
 import { ListItem } from "./list-item";
 
 export function Listing({ products }: { products: Product[] }) {

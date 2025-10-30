@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import type { Product } from "@/lib/api";
+import { Product } from "@/types/products";
 
 export type CartItem = {
   id: number;
