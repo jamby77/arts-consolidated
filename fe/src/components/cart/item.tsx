@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { CartItem, useCart } from "@/store/cart";
+import { useCart } from "@/store/cart";
+import { CartItem } from "@/types/cart";
 
 export function Item({ item }: { item: CartItem }) {
   const remove = useCart((s) => s.remove);

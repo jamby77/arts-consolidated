@@ -1,12 +1,21 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { useCart } from "@/store/cart";
+import { CartItem } from "@/types/cart";
+
+import { Item } from "./item";
+import { Summary } from "./summary";
 import { Empty } from "./empty";
-import { Item } from "@/components/cart/item";
-import { Summary } from "@/components/cart/summary";
 
 export function Cart() {
-  const items = useCart((s) => s.asArray());
+  const [items, setItems] = useState<CartItem[]>([]);
+  const asArray = useCart((s) => s.asArray);
+  useEffect(() => {
+    setItems(asArray());
+  }, [asArray]);
+
   if (items.length === 0) {
     return <Empty />;
   }

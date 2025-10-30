@@ -12,13 +12,12 @@ export function SiteHeader() {
           <Link href="/products" className="hover:underline">
             Products
           </Link>
-          <Link
-            href="/cart"
-            className="flex items-center gap-1 hover:underline"
-          >
-            <span>Cart</span>
+          <div className="flex items-center gap-2">
+            <Link href="/cart" className="hover:underline">
+              Cart
+            </Link>
             <Counter />
-          </Link>
+          </div>
         </nav>
       </div>
     </header>

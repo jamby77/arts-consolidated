@@ -1,16 +1,9 @@
 "use client";
 
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { Product } from "@/types/products";
-
-export type CartItem = {
-  id: number;
-  title: string;
-  price: number;
-  thumbnail?: string;
-  quantity: number;
-};
+import { CartItem } from "@/types/cart";
 
 type CartState = {
   items: Record<number, CartItem>;
