@@ -17,6 +17,7 @@ export async function fetchProducts(
   },
 ) {
   if (USE_MOCKS) {
+    console.log("fetchProducts", { limit, skip });
     return mockFetchProducts({ limit, skip });
   }
 

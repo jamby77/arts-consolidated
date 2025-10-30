@@ -15,6 +15,7 @@ export async function mockFetchProducts(
 ) {
   const all = (mockProducts.products ?? []) as Product[];
   const sliced = all.slice(skip, skip + limit);
+  console.log("mockFetchProducts", { limit, skip, sliced });
   const total = (mockProducts as any).total ?? all.length;
   return {
     products: sliced,
