@@ -1,10 +1,15 @@
 import express from "express";
-import { config } from "./config.js";
-import { ensureSchema, getProductById, listCategories, listProducts } from "./db/mysql.js";
-import { ensureIndex, es, PRODUCT_INDEX } from "./es/client.js";
+import { config } from "./config";
+import { ensureSchema, getProductById, listCategories, listProducts } from "./db/mysql";
+import { ensureIndex, es, PRODUCT_INDEX } from "./es/client";
 
 const app = express();
 app.use(express.json());
+
+app.get('/', async (_req, res) => {
+  // redirect to /health
+  res.redirect("/health");
+});
 
 app.get("/health", async (_req, res) => {
   res.json({ ok: true });

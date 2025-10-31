@@ -9,6 +9,8 @@ RUN npm install --no-audit --no-fund
 # Copy source
 COPY src ./src
 COPY scripts ./scripts
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 
 # Build
 RUN npm run build || true
@@ -16,4 +18,4 @@ RUN npm run build || true
 # Runtime
 EXPOSE 3001
 ENV NODE_ENV=production
-CMD ["npm", "run", "dev"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
