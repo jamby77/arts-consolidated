@@ -105,7 +105,6 @@ export async function listCategories(): Promise<CategoryRow[]> {
 
 export type ProductFilters = {
   category?: string;
-  q?: string;
   minPrice?: number;
   maxPrice?: number;
   limit?: number;
@@ -119,11 +118,7 @@ export async function listProducts(filters: ProductFilters = {}) {
     where.push("category_id = (SELECT id FROM categories WHERE name = ?)");
     params.push(filters.category);
   }
-  if (filters.q) {
-    where.push("(title LIKE ? OR description LIKE ? OR brand LIKE ?)");
-    const like = `%${filters.q}%`;
-    params.push(like, like, like);
-  }
+
   if (typeof filters.minPrice === "number") {
     where.push("price >= ?");
     params.push(filters.minPrice);

@@ -7,10 +7,10 @@ import { z } from "zod";
 const QuerySchema = z.object({
   category: z.string().min(1).optional(),
   q: z.string().min(1).optional(),
-  minPrice: z.coerce.number().nonnegative().optional(),
-  maxPrice: z.coerce.number().nonnegative().optional(),
-  limit: z.coerce.number().int().positive().max(100).default(24),
-  offset: z.coerce.number().int().min(0).default(0),
+  minPrice: z.coerce.number<number>().nonnegative().optional(),
+  maxPrice: z.coerce.number<number>().nonnegative().optional(),
+  limit: z.coerce.number<number>().int().positive().max(100).default(24),
+  offset: z.coerce.number<number>().int().min(0).default(0),
 });
 
 // Output product schema to normalize/validate response
@@ -18,10 +18,10 @@ const ProductSchema = z.object({
   id: z.number().int(),
   title: z.string(),
   description: z.string().optional().nullable(),
-  price: z.number(),
-  discountPercentage: z.number().optional().nullable(),
-  rating: z.number().optional().nullable(),
-  stock: z.number().optional().nullable(),
+  price: z.coerce.number<number>(),
+  discountPercentage: z.coerce.number<number>().optional().nullable(),
+  rating: z.coerce.number<number>().optional().nullable(),
+  stock: z.coerce.number<number>().optional().nullable(),
   brand: z.string().optional().nullable(),
   category: z.string().optional().nullable(),
   thumbnail: z.url().optional().nullable(),
@@ -72,7 +72,7 @@ async function esProductHandler(
 
   const resp = await es.search({index: PRODUCT_INDEX, ...body});
   const docs = (resp.hits?.hits || []).map((h: any) => h._source);
-  const validated = ProductsResponseSchema.parse(
+  return ProductsResponseSchema.parse(
     docs.map((d: any) => ({
       id: Number(d.id),
       title: d.title,
@@ -91,30 +91,29 @@ async function esProductHandler(
 
 export async function productsHandler(req: Request, res: Response) {
   try {
-    const parsed = QuerySchema.parse(req.query);
+    const parsed = QuerySchema.optional().parse(req.query);
 
     // If q is provided, prefer Elasticsearch for text search + filters
-    if (parsed.q) {
+    if (parsed?.q) {
       return res.json(await esProductHandler(parsed));
     }
 
     // Fallback to MySQL when no text query
     const rows = await listProducts({
-      category: parsed.category,
-      q: undefined,
-      minPrice: parsed.minPrice,
-      maxPrice: parsed.maxPrice,
-      limit: parsed.limit ?? 24,
-      offset: parsed.offset ?? 0,
+      category: parsed?.category,
+      minPrice: parsed?.minPrice,
+      maxPrice: parsed?.maxPrice,
+      limit: parsed?.limit ?? 24,
+      offset: parsed?.offset ?? 0,
     });
 
     const validated = ProductsResponseSchema.parse(rows);
     res.json(validated);
   } catch (e: any) {
-    if (e?.name === "ZodError") {
+    if (e instanceof z.ZodError) {
       return res.status(400).json({
         error: "Invalid request",
-        details: z.prettifyError(e.errors)
+        details: z.prettifyError(e)
       });
     }
     res.status(500).json({error: e.message});
