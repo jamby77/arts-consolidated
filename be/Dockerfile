@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:20-alpine AS base
+FROM node:25.1.0-alpine AS base
 WORKDIR /app
 
 # Install deps

@@ -36,7 +36,7 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.get("/products/aggs", async (req, res) => {
+app.get("/products/aggs", async (_req, res) => {
   try {
     const body: any = {
       size: 0,

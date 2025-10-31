@@ -1,4 +1,3 @@
-import axios from "axios";
 import { ensureSchema, upsertCategory, upsertProduct } from "../src/db/mysql.js";
 import { ensureIndex, es, PRODUCT_INDEX } from "../src/es/client.js";
 
@@ -8,7 +7,11 @@ async function fetchAllProducts() {
   const limit = 100;
   while (true) {
     const url = `https://dummyjson.com/products?limit=${limit}&skip=${skip}`;
-    const { data } = await axios.get(url);
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch products: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
     products = products.concat(data.products);
     skip += data.products.length;
     if (skip >= data.total || data.products.length === 0) break;
