@@ -8,7 +8,7 @@
 ## Tech Stack
 - **Framework**: Next.js 16 (App Router `src/app/`)
 - **Language**: TypeScript (strict)
-- **UI**: Tailwind CSS v4 + shadcn/ui
+- **UI**: Tailwind CSS v4 
 - **State**: Zustand for cart with persistence
 - **Fonts**: `next/font` (Geist)
 - **Linting**: ESLint 9 + `eslint-config-next`
@@ -40,20 +40,8 @@
 - Cart page to add/remove, show count and totals.
 
 3) UI polish
-- Initialize shadcn/ui and add base components (button, card, badge, input, separator, skeleton, sheet).
 - Replace ad-hoc components with shadcn/ui equivalents.
 - Add loading and error states for list/detail pages.
 
 4) Docs
 - Update README with setup, scripts, and notes.
-
-## Tasks (High-level)
-- [ ] Initialize shadcn/ui and generate base components
-- [ ] Create `src/lib/api.ts`
-- [ ] Implement `/products` list page
-- [ ] Implement `/products/[id]` detail page
-- [ ] Create cart store with persistence
-- [ ] Implement `/cart` page
-- [ ] Add header with navigation and cart count
-- [ ] Add loading/error states
-- [ ] Update README

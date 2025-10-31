@@ -29,8 +29,44 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Run the app locally
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Install dependencies**
+  - Recommended: `pnpm install` (repo includes `pnpm-lock.yaml`)
+  - Also works: `npm install`, `yarn install`, or `bun install`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Environment variables** (create `fe/.env.local`)
+  - To use live DummyJSON API:
+    - `API_BASE_URL=https://dummyjson.com`
+    - `USE_MOCKS=false`
+  - To use local mocks (no network):
+    - `USE_MOCKS=true` (then `API_BASE_URL` is not required)
+
+- **Start the dev server**
+  - `pnpm dev` (or `npm run dev` / `yarn dev` / `bun dev`)
+  - Open http://localhost:3000
+
+- **Build and run production**
+  - `pnpm build` then `pnpm start`
+
+- **Lint**
+  - `pnpm lint`
+
+Notes:
+- Remote images are allowed from `i.dummyjson.com` and `cdn.dummyjson.com` via `next.config.ts`.
+- If `USE_MOCKS` is not `true`, `API_BASE_URL` must be set or product requests will throw (see `src/lib/api.ts`).
+
+## Thought process and trade-offs
+
+- **Framework choice**: Next.js App Router with React Server Components for data fetching; Client Components only where interactivity is needed (cart UI). Trade-off: simpler mental model per page, but requires clear server/client boundaries. And no API for native mobile app for example.
+- **State management**: Zustand for cart with persistence. Trade-off: lightweight and ergonomic vs. fewer built-in patterns than Redux. Persistence favors UX but adds localStorage coupling on the client.
+- **Styling**: Tailwind CSS v4. Trade-off: speed and consistency vs. initial setup overhead.
+- **Caching**: `fetch(..., { next: { revalidate } })` for basic ISR on product list/detail. Trade-off: good default performance with eventual consistency.
+
+## Known limitations
+
+- **Features**: No search, filtering, or checkout flow; focus is product browsing and a local cart.
+- **Cart persistence**: Uses client-side storage; cart is not synced across devices or sessions outside the browser.
+- **Error/loading states**: Basic handling is present but not yet comprehensive across all pages.
+- **Tests**: No automated tests included yet.
+- **API constraints**: When using live `dummyjson.com`, you are subject to its availability and any rate limits.
