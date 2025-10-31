@@ -1,6 +1,13 @@
 @url=http://localhost:3001
 
-### GET products
+### GET products, plain
 GET {{url}}/products
 
-###
+### GET Products, Elasticsearch
+GET {{url}}/products?q=Casual
+
+### GET Products, Elasticsearch, with filters
+GET {{url}}/products?q=Casual&minPrice=100&maxPrice=200
+
+### GET Products, Elasticsearch, with filters and offset
+GET {{url}}/products?q=Casual&maxPrice=200&offset=0&limit=2
