@@ -3,7 +3,7 @@ import Image from "next/image";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { Product } from "@/types/products";
 
-export function ListItem({ product }: { product: Product }) {
+export function ProductCard({ product }: { product: Product }) {
   return (
     <li
       key={product.id}
