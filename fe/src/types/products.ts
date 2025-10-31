@@ -5,7 +5,7 @@ export type Product = {
   description: string;
   price: number;
   weight: number;
-  discountPercentage: number;
+  discountPercentage?: number;
   rating: number;
   stock: number;
   brand?: string;

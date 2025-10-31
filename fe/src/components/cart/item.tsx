@@ -4,6 +4,8 @@ import { CartItem } from "@/types/cart";
 
 export function Item({ item }: { item: CartItem }) {
   const remove = useCart((s) => s.remove);
+  const increment = useCart((s) => s.increment);
+  const decrement = useCart((s) => s.decrement);
   return (
     <div
       key={item.id}
@@ -30,8 +32,22 @@ export function Item({ item }: { item: CartItem }) {
       </div>
       <div className="min-w-0 flex-1">
         <div className="truncate font-medium">{item.title}</div>
-        <div className="text-sm text-zinc-600 dark:text-zinc-300">
-          Qty: {item.quantity}
+        <div className="flex items-center gap-2">
+          <div className="text-sm text-zinc-600 dark:text-zinc-300">
+            Qty: {item.quantity}
+          </div>
+          <button
+            onClick={() => decrement(item.id)}
+            className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-black/10 text-sm font-medium transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+          >
+            -
+          </button>
+          <button
+            onClick={() => increment(item.id)}
+            className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-black/10 text-sm font-medium transition-colors hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+          >
+            +
+          </button>
         </div>
       </div>
       <div className="w-20 text-right text-sm font-medium">

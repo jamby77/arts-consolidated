@@ -6,9 +6,11 @@ import { useCart } from "@/store/cart";
 
 export function Counter() {
   const [count, setCount] = useState(0);
-  const counter = useCart((s) => s.count);
+  const counter = useCart((s) =>
+    Object.values(s.items).reduce((acc, it) => acc + it.quantity, 0),
+  );
   useEffect(() => {
-    setCount(counter());
+    setCount(counter);
   }, [counter]);
 
   return (

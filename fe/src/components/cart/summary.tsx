@@ -1,9 +1,9 @@
-import { useCart } from "@/store/cart";
+import { useCart, useCartCount, useCartTotal } from "@/store/cart";
 
 export function Summary() {
   const clear = useCart((s) => s.clear);
-  const count = useCart((s) => s.count());
-  const total = useCart((s) => s.total());
+  const count = useCartCount();
+  const total = useCartTotal();
   return (
     <div className="h-fit rounded-xl border border-black/10 bg-white p-4 dark:border-white/15 dark:bg-black/40">
       <h2 className="mb-2 font-medium">Summary</h2>

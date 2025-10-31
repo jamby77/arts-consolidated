@@ -4,20 +4,26 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { Product } from "@/types/products";
 import { CartItem } from "@/types/cart";
+import { useMemo } from "react";
 
 type CartState = {
   items: Record<number, CartItem>;
   add: (product: Product, qty?: number) => void;
   remove: (id: number) => void;
+  increment: (id: number) => void;
+  decrement: (id: number) => void;
   clear: () => void;
-  count: () => number;
-  total: () => number;
-  asArray: () => CartItem[];
 };
+
+function removeItem(id: number, state: CartState) {
+  const copy = { ...state.items };
+  delete copy[id];
+  return { items: copy };
+}
 
 export const useCart = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       items: {},
       add: (product, qty = 1) =>
         set((state) => {
@@ -36,21 +42,30 @@ export const useCart = create<CartState>()(
             },
           };
         }),
-      remove: (id) =>
+      remove: (id) => set((state) => removeItem(id, state)),
+      increment: (id) =>
         set((state) => {
+          if (!state.items[id]) {
+            return state;
+          }
           const copy = { ...state.items };
-          delete copy[id];
+          // obviously, if this is real e-commerce app, we should check if the quantity is available
+          copy[id].quantity++;
+          return { items: copy };
+        }),
+      decrement: (id) =>
+        set((state) => {
+          if (!state.items[id] || state.items[id].quantity === 0) {
+            return state;
+          }
+          if (state.items[id].quantity === 1) {
+            return removeItem(id, state);
+          }
+          const copy = { ...state.items };
+          copy[id].quantity--;
           return { items: copy };
         }),
       clear: () => set({ items: {} }),
-      count: () =>
-        Object.values(get().items).reduce((acc, it) => acc + it.quantity, 0),
-      total: () =>
-        Object.values(get().items).reduce(
-          (acc, it) => acc + it.price * it.quantity,
-          0,
-        ),
-      asArray: () => Object.values(get().items),
     }),
     {
       name: "cart-store",
@@ -59,3 +74,25 @@ export const useCart = create<CartState>()(
     },
   ),
 );
+
+export const useCartTotal = () => {
+  const items = useCart((s) => s.items);
+  return useMemo(
+    () =>
+      Object.values(items).reduce((acc, it) => acc + it.price * it.quantity, 0),
+    [items],
+  );
+};
+
+export const useCartCount = () => {
+  const items = useCart((s) => s.items);
+  return useMemo(
+    () => Object.values(items).reduce((acc, it) => acc + it.quantity, 0),
+    [items],
+  );
+};
+
+export const useCartItemsAsArray = () => {
+  const items = useCart((s) => s.items);
+  return useMemo(() => Object.values(items), [items]);
+};
