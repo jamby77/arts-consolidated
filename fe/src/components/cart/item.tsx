@@ -50,8 +50,16 @@ export function Item({ item }: { item: CartItem }) {
           </button>
         </div>
       </div>
-      <div className="w-20 text-right text-sm font-medium">
-        ${(item.price * item.quantity).toFixed(2)}
+      <div className="flex w-48 items-center justify-end gap-2">
+        {item.discountPercentage > 0 && (
+          <div className="w-fit text-right text-xs font-light">
+            (${(item.price * item.quantity).toFixed(2)} -{" "}
+            {item.discountPercentage}%)
+          </div>
+        )}
+        <div className="w-12 text-right text-sm font-bold text-green-600">
+          ${(item.finalPrice * item.quantity).toFixed(2)}
+        </div>
       </div>
       <button
         onClick={() => remove(item.id)}

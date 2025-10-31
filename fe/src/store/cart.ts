@@ -29,12 +29,16 @@ export const useCart = create<CartState>()(
         set((state) => {
           const existing = state.items[product.id];
           const nextQty = (existing?.quantity ?? 0) + qty;
+          let discountRate = product.discountPercentage ?? 0;
           return {
             items: {
               ...state.items,
               [product.id]: {
                 id: product.id,
                 title: product.title,
+                discountPercentage: discountRate,
+                finalPrice:
+                  product.price - (product.price * discountRate) / 100,
                 price: product.price,
                 thumbnail: product.thumbnail ?? product.images?.[0],
                 quantity: nextQty,
@@ -79,7 +83,22 @@ export const useCartTotal = () => {
   const items = useCart((s) => s.items);
   return useMemo(
     () =>
-      Object.values(items).reduce((acc, it) => acc + it.price * it.quantity, 0),
+      Object.values(items).reduce(
+        (acc, it) => acc + it.finalPrice * it.quantity,
+        0,
+      ),
+    [items],
+  );
+};
+
+export const useCartSavings = () => {
+  const items = useCart((s) => s.items);
+  return useMemo(
+    () =>
+      Object.values(items).reduce(
+        (acc, it) => acc + (it.price - it.finalPrice) * it.quantity,
+        0,
+      ),
     [items],
   );
 };
